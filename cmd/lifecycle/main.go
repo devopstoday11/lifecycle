@@ -19,9 +19,9 @@ func main() {
 
 	switch strings.TrimSuffix(filepath.Base(os.Args[0]), filepath.Ext(os.Args[0])) {
 	case "detector":
-		cmd.Run(&detectCmd{platformAPI: platformAPI}, false)
+		cmd.Run(&detectCmd{detectArgs: detectArgs{platformAPI: platformAPI}}, false)
 	case "analyzer":
-		cmd.Run(&analyzeCmd{platformAPI: platformAPI}, false)
+		cmd.Run(&analyzeCmd{analyzeArgs: analyzeArgs{platformAPI: platformAPI}}, false)
 	case "restorer":
 		cmd.Run(&restoreCmd{platformAPI: platformAPI}, false)
 	case "builder":

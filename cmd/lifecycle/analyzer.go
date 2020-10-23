@@ -30,10 +30,11 @@ type analyzeCmd struct {
 
 type analyzeArgs struct {
 	//inputs needed when run by creator
-	imageName  string
-	layersDir  string
-	skipLayers bool
-	useDaemon  bool
+	imageName   string
+	layersDir   string
+	platformAPI string
+	skipLayers  bool
+	useDaemon   bool
 
 	//construct if necessary before dropping privileges
 	docker client.CommonAPIClient
@@ -41,10 +42,10 @@ type analyzeArgs struct {
 
 func (a *analyzeCmd) Init() {
 	cmd.FlagLayersDir(&a.layersDir)
-	cmd.FlagAnalyzedPath(a.platformAPI, a.layersDir, &a.analyzedPath)
+	cmd.FlagAnalyzedPath(a.analyzeArgs.platformAPI, a.layersDir, &a.analyzedPath)
 	cmd.FlagCacheDir(&a.cacheDir)
 	cmd.FlagCacheImage(&a.cacheImageTag)
-	cmd.FlagGroupPath(a.platformAPI, a.layersDir, &a.groupPath)
+	cmd.FlagGroupPath(a.analyzeArgs.platformAPI, a.layersDir, &a.groupPath)
 	cmd.FlagSkipLayers(&a.skipLayers)
 	cmd.FlagUseDaemon(&a.useDaemon)
 	cmd.FlagUID(&a.uid)

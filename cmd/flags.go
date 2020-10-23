@@ -61,8 +61,8 @@ const (
 
 var flagSet = flag.NewFlagSet("lifecycle", flag.ExitOnError)
 
-func FlagAnalyzedPath(version, layersDir string, dir *string) {
-	analyzedDir := getRelativePath(version, layersDir)
+func FlagAnalyzedPath(platformAPI, layersDir string, dir *string) {
+	analyzedDir := defaultOutputDir(platformAPI, layersDir)
 	flagSet.StringVar(dir, "analyzed", EnvOrDefault(EnvAnalyzedPath, filepath.Join(analyzedDir, DefaultAnalyzedFileName)), "path to analyzed.toml")
 }
 
@@ -86,8 +86,8 @@ func FlagGID(gid *int) {
 	flagSet.IntVar(gid, "gid", intEnv(EnvGID), "GID of user's group in the stack's build and run images")
 }
 
-func FlagGroupPath(version, layersDir string, path *string) {
-	groupDir := getRelativePath(version, layersDir)
+func FlagGroupPath(platformAPI, layersDir string, path *string) {
+	groupDir := defaultOutputDir(platformAPI, layersDir)
 	flagSet.StringVar(path, "group", EnvOrDefault(EnvGroupPath, filepath.Join(groupDir, DefaultGroupFileName)), "path to group.toml")
 }
 
@@ -111,8 +111,8 @@ func FlagOrderPath(path *string) {
 	flagSet.StringVar(path, "order", EnvOrDefault(EnvOrderPath, DefaultOrderPath), "path to order.toml")
 }
 
-func FlagPlanPath(version, layersDir string, path *string) {
-	planDir := getRelativePath(version, layersDir)
+func FlagPlanPath(platformAPI, layersDir string, path *string) {
+	planDir := defaultOutputDir(platformAPI, layersDir)
 	flagSet.StringVar(path, "plan", EnvOrDefault(EnvPlanPath, filepath.Join(planDir, DefaultPlanFileName)), "path to plan.toml")
 }
 
@@ -124,8 +124,8 @@ func FlagPreviousImage(image *string) {
 	flagSet.StringVar(image, "previous-image", os.Getenv(EnvPreviousImage), "reference to previous image")
 }
 
-func FlagReportPath(version, layersDir string, path *string) {
-	reportDir := getRelativePath(version, layersDir)
+func FlagReportPath(platformAPI, layersDir string, path *string) {
+	reportDir := defaultOutputDir(platformAPI, layersDir)
 	flagSet.StringVar(path, "report", EnvOrDefault(EnvReportPath, filepath.Join(reportDir, DefaultReportFileName)), "path to report.toml")
 }
 
@@ -165,8 +165,8 @@ func FlagLogLevel(level *string) {
 	flagSet.StringVar(level, "log-level", EnvOrDefault(EnvLogLevel, DefaultLogLevel), "logging level")
 }
 
-func FlagProjectMetadataPath(version, layersDir string, projectMetadataPath *string) {
-	projectMetadataDir := getRelativePath(version, layersDir)
+func FlagProjectMetadataPath(platformAPI, layersDir string, projectMetadataPath *string) {
+	projectMetadataDir := defaultOutputDir(platformAPI, layersDir)
 	flagSet.StringVar(projectMetadataPath, "project-metadata", EnvOrDefault(EnvProjectMetadataPath, filepath.Join(projectMetadataDir, DefaultProjectMetadataFileName)), "path to project-metadata.toml")
 }
 
@@ -214,12 +214,12 @@ func EnvOrDefault(key string, defaultVal string) string {
 	return defaultVal
 }
 
-func isVersionLessThan05(version string) bool {
-	return api.MustParse(version).Compare(api.MustParse("0.5")) < 0
+func isVersionLessThan05(platformAPI string) bool {
+	return api.MustParse(platformAPI).Compare(api.MustParse("0.5")) < 0
 }
 
-func getRelativePath(version, layersDir string) string {
-	if layersDir == "" || isVersionLessThan05(version) {
+func defaultOutputDir(platformAPI, layersDir string) string {
+	if layersDir == "" || isVersionLessThan05(platformAPI) {
 		return "."
 	}
 	return layersDir

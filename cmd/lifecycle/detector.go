@@ -14,7 +14,6 @@ import (
 type detectCmd struct {
 	// flags: inputs
 	detectArgs
-	platformAPI string
 
 	// flags: paths to write outputs
 	groupPath string
@@ -25,6 +24,8 @@ type detectArgs struct {
 	// inputs needed when run by creator
 	buildpacksDir string
 	appDir        string
+	layersDir     string
+	platformAPI   string
 	platformDir   string
 	orderPath     string
 }
@@ -32,10 +33,11 @@ type detectArgs struct {
 func (d *detectCmd) Init() {
 	cmd.FlagBuildpacksDir(&d.buildpacksDir)
 	cmd.FlagAppDir(&d.appDir)
-	cmd.FlagPlatformDir(&d.platformDir)
+	cmd.FlagLayersDir(&d.layersDir)
+	cmd.FlagPlatformDir(&d.detectArgs.platformDir)
 	cmd.FlagOrderPath(&d.orderPath)
-	cmd.FlagGroupPath(d.platformAPI, "", &d.groupPath)
-	cmd.FlagPlanPath(d.platformAPI, "", &d.planPath)
+	cmd.FlagGroupPath(d.detectArgs.platformAPI, d.detectArgs.layersDir, &d.groupPath)
+	cmd.FlagPlanPath(d.detectArgs.platformAPI, d.detectArgs.layersDir, &d.planPath)
 }
 
 func (d *detectCmd) Args(nargs int, args []string) error {
